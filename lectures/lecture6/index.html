@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>readmemo - 読書メモアプリ</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Google Fonts Outfit & Noto Sans JP -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- 1. ログイン画面 (初期表示) -->
+  <div id="login-screen" class="auth-container">
+    <div class="auth-card glass-panel">
+      <div class="auth-logo">
+        <span class="logo-icon">📖</span>
+        <h1>readmemo</h1>
+      </div>
+      <h2>読書メモをはじめましょう</h2>
+      <p class="auth-subtitle">ユーザー名を入力してログインしてください。メモはユーザーごとに個別に保存され、他の人に公開されることはありません。</p>
+      
+      <form id="login-form">
+        <div class="form-group">
+          <label for="login-username">ユーザー名 <span class="required">*</span></label>
+          <input type="text" id="login-username" placeholder="例: user_tarou" required autocomplete="off">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">ログインする</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. メインアプリケーション画面 (ログイン後に表示) -->
+  <div id="main-app" class="app-container hidden">
+    <!-- ヘッダー -->
+    <header class="app-header">
+      <div class="header-logo">
+        <span class="logo-icon">📖</span>
+        <h1>readmemo</h1>
+        <span class="user-badge" id="current-user-display">@user</span>
+      </div>
+      <button id="logout-btn" class="btn btn-secondary">ログアウト</button>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="app-main">
+      <!-- 左サイドバー: メモ追加・編集フォーム -->
+      <section class="form-section glass-panel">
+        <div class="form-header">
+          <h2 class="section-title" id="form-title">新しいメモを追加</h2>
+          <span id="edit-indicator" class="edit-badge hidden">編集モード</span>
+        </div>
+        
+        <form id="memo-form" novalidate>
+          <!-- 編集中のメモID保存用非表示フィールド -->
+          <input type="hidden" id="edit-memo-id">
+
+          <div class="form-group">
+            <label for="book-title">本のタイトル <span class="required">*</span></label>
+            <input type="text" id="book-title" placeholder="例: 人間失格" required autocomplete="off">
+          </div>
+
+          <div class="form-group">
+            <label for="book-author">著者名（AI自動推定・手入力可能）</label>
+            <div class="author-input-wrapper">
+              <input type="text" id="book-author" placeholder="タイトルを入力すると自動で推定されますが、編集も可能です">
+              <span id="author-status" class="status-indicator"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="book-content">一言メモ <span class="required">*</span></label>
+            <textarea id="book-content" rows="3" placeholder="本を読んだ感想や心に残った一言を記入してください" required></textarea>
+          </div>
+
+          <!-- AIタグ提案エリア -->
+          <div class="form-group" id="ai-tags-group">
+            <label>AI提案タグ候補（クリックで追加）</label>
+            <div id="ai-tags-container" class="tags-cloud">
+              <span class="placeholder-text">タイトルを入力するとAIがタグを提案します</span>
+            </div>
+          </div>
+
+          <!-- タグ手動入力 -->
+          <div class="form-group">
+            <label for="tag-input">タグ（手動入力）</label>
+            <div class="tag-input-wrapper">
+              <input type="text" id="tag-input" placeholder="タグを入力してEnterで追加" autocomplete="off">
+              <!-- 既存タグの候補表示（入力補助） -->
+              <div id="tag-suggestions" class="suggestions-list hidden"></div>
+            </div>
+            <div id="active-tags-container" class="tags-container">
+              <!-- 追加されたタグがここに並ぶ -->
+            </div>
+          </div>
+
+          <div class="form-actions-row">
+            <button type="submit" id="submit-btn" class="btn btn-primary flex-grow">メモを保存する</button>
+            <button type="button" id="cancel-edit-btn" class="btn btn-secondary hidden">キャンセル</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- 右エリア: メモ一覧・検索 -->
+      <section class="list-section">
+        <!-- 検索・フィルターパネル -->
+        <div class="filter-panel glass-panel">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-input" placeholder="タイトル、メモ、タグで検索...">
+          </div>
+          
+          <div class="filter-tags-wrapper">
+            <span class="filter-label">タグで絞り込み:</span>
+            <div id="filter-tags-container" class="tags-container">
+              <!-- 登録されている全タグが表示され、クリックで絞り込める -->
+              <span class="no-tags-text">タグがありません</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- メモ一覧 -->
+        <div class="memos-list-header">
+          <h2 class="section-title">読書メモ一覧 (<span id="memo-count">0</span>)</h2>
+          <button id="clear-filters-btn" class="btn btn-text hidden">絞り込みを解除</button>
+        </div>
+        
+        <div id="memos-container" class="memos-grid">
+          <!-- メモカードが動的に挿入される -->
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ログイン時の過去メモ推薦モーダル -->
+  <div id="login-modal" class="modal-overlay hidden">
+    <div class="modal-content glass-panel">
+      <div class="modal-header">
+        <h2>おかえりなさい！ 👋</h2>
+        <p class="modal-subtitle">ログインしました。過去のメモからおすすめの2冊をお届けします。</p>
+      </div>
+
+      <div class="recommendations-container">
+        <!-- 推薦カード1 -->
+        <div id="rec-card-0" class="recommend-card">
+          <div class="card-empty-state">
+            <p>過去のメモがありません</p>
+          </div>
+        </div>
+        
+        <!-- 推薦カード2 -->
+        <div id="rec-card-1" class="recommend-card">
+          <div class="card-empty-state">
+            <p>過去のメモがありません</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="close-login-btn" class="btn btn-primary">マイ読書メモへ進む</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
