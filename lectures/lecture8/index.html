@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>読書メモ</title>
+    <!-- シンプルな大人向けフォント（Inter と Noto Sans JP）を読み込み -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- ログイン画面 -->
+    <div id="login-screen" class="container">
+        <h1 class="login-title">読書メモ</h1>
+        <p class="login-desc">ユーザ名を入力してください</p>
+        <form id="login-form">
+            <div class="form-group">
+                <input type="text" id="username" required placeholder="ユーザ名（例: 太郎）">
+            </div>
+            <button type="submit" id="login-button">ログイン</button>
+        </form>
+    </div>
+
+    <!-- メインアプリ画面（初期状態は非表示） -->
+    <div id="app-screen" class="container" style="display: none;">
+        <div class="app-header">
+            <h1 id="app-header-title">トップ</h1>
+            <div class="user-info">
+                <span><span id="display-username" class="user-name-text"></span> さん</span>
+                <button id="logout-button" class="action-btn logout">ログアウト</button>
+            </div>
+        </div>
+
+        <!-- ==============================================
+             トップ画面
+             ============================================== -->
+        <div id="top-screen" class="screen-section">
+            <div class="top-menu">
+                <button id="nav-create-btn" class="menu-btn">📝 新規メモを作成・一覧</button>
+                <button id="nav-review-btn" class="menu-btn">🔍 過去のメモを振り返る</button>
+            </div>
+        </div>
+
+        <!-- ==============================================
+             メモ作成・一覧画面
+             ============================================== -->
+        <div id="create-screen" class="screen-section" style="display: none;">
+            
+            <!-- 登録フォーム（著者、気づき、タグを追加） -->
+            <form id="memo-form">
+                <div class="form-group">
+                    <label for="book-title">本のタイトル</label>
+                    <input type="text" id="book-title" required placeholder="例: 星の王子さま">
+                </div>
+                <div class="form-group">
+                    <label for="book-author">著者</label>
+                    <input type="text" id="book-author" placeholder="例: サン＝テグジュペリ">
+                </div>
+                <div class="form-group">
+                    <label for="book-memo">一言メモ</label>
+                    <textarea id="book-memo" required placeholder="例: 大切なものは目に見えない。"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="book-insight">気づき（この本から何を学んだか）</label>
+                    <textarea id="book-insight" placeholder="例: 目に見えるものだけで判断しないようにしたい。"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="book-tags">タグ（カンマ区切り）</label>
+                    <input type="text" id="book-tags" placeholder="例: 哲学, 小説, 人生">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" id="submit-button">保存する</button>
+                    <button type="button" id="cancel-edit-button" style="display: none;">キャンセル</button>
+                </div>
+            </form>
+
+            <!-- 検索とソートUI -->
+            <div class="search-section">
+                <div class="section-header">
+                    <h2>検索・絞り込み</h2>
+                </div>
+                <div class="search-controls">
+                    <input type="text" id="search-text" placeholder="キーワード・内容で検索">
+                    <input type="text" id="search-tag" placeholder="タグで検索">
+                    <div class="date-search">
+                        <input type="date" id="search-date-from"> 〜 <input type="date" id="search-date-to">
+                    </div>
+                    <div class="sort-control">
+                        <label><input type="checkbox" id="sort-reread"> 再読回数が多い順に並び替え</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- メモ一覧表示エリア -->
+            <div class="memo-list-section">
+                <div class="section-header">
+                    <h2>保存したメモ</h2>
+                </div>
+                <ul id="memo-list">
+                    <!-- ここにJavaScriptでメモが追加されます -->
+                </ul>
+            </div>
+        </div>
+
+        <!-- ==============================================
+             振り返り画面
+             ============================================== -->
+        <div id="review-screen" class="screen-section" style="display: none;">
+            <div class="review-controls">
+                <button id="review-random-btn" class="review-btn">ランダムに1件</button>
+                <button id="review-1w-btn" class="review-btn">1週間前</button>
+                <button id="review-1m-btn" class="review-btn">1ヶ月前</button>
+                <button id="review-1y-btn" class="review-btn">1年前</button>
+            </div>
+
+            <div id="review-display-area" class="review-display">
+                <p class="empty-message">上のボタンから振り返るメモを選んでください。</p>
+            </div>
+
+            <!-- 追記フォーム (メモが表示されている時のみ表示) -->
+            <div id="reflection-form-container" style="display: none;">
+                <form id="reflection-form">
+                    <div class="form-group">
+                        <label for="reflection-text">気づいたこと（追記）</label>
+                        <textarea id="reflection-text" required placeholder="過去のメモを見て、今どう思うか書いてみましょう。"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit">追記して保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 左下のフローティング切り替えボタン -->
+    <button id="global-nav-btn" class="floating-btn" style="display: none;">
+        <span>🏠 トップへ</span>
+    </button>
+
+    <script src="app.js"></script>
+</body>
+</html>
