@@ -2,7 +2,7 @@
 // Supabase 設定 (ご自身のプロジェクト情報に書き換えてください)
 // ---------------------------------------------
 const SUPABASE_URL = 'https://zmbnkfpubmnpkwbmojkg.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InptYm5rZnB1Ym1ucGt3Ym1vamtnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2OTc2MTgsImV4cCI6MjA5NzI3MzYxOH0.jzd3pq74jTdmTqzd-QcO2jylO3IhHuvhxQf1b2N0xzY';
+const SUPABASE_ANON_KEY = 'sb_publishable_xlP_EguyPRninpAfhkuEOw__Bh185l5';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // --- 画面要素の取得 ---
