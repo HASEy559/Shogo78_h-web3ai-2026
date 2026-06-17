@@ -14,6 +14,39 @@ const authPassword = document.getElementById('auth-password');
 const authLoginBtn = document.getElementById('auth-login-btn');
 const authSignupBtn = document.getElementById('auth-signup-btn');
 const authErrorMsg = document.getElementById('auth-error-msg');
+// --- ここを修正：clickではなくformのsubmitで制御する、またはpreventDefaultを入れる ---
+
+authLoginBtn.addEventListener('click', async (e) => {
+    e.preventDefault(); // ページのリロードを防止！
+    authErrorMsg.style.display = 'none';
+    const email = authEmail.value;
+    const password = authPassword.value;
+    
+    if (!email || !password) return; // 空判定
+
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+        authErrorMsg.textContent = error.message;
+        authErrorMsg.style.display = 'block';
+    }
+});
+
+authSignupBtn.addEventListener('click', async (e) => {
+    e.preventDefault(); // ページのリロードを防止！
+    authErrorMsg.style.display = 'none';
+    const email = authEmail.value;
+    const password = authPassword.value;
+
+    if (!email || !password) return; // 空判定
+
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) {
+        authErrorMsg.textContent = error.message;
+        authErrorMsg.style.display = 'block';
+    } else {
+        alert('登録確認メールを確認してください（※設定をオフにしている場合はそのままログイン可能です）');
+    }
+});
 
 // メインアプリコンテナ
 const appScreen = document.getElementById('app-screen');
@@ -34,6 +67,7 @@ const titleInput = document.getElementById('book-title');
 const authorInput = document.getElementById('book-author');
 const memoInput = document.getElementById('book-memo');
 const insightInput = document.getElementById('book-insight');
+
 const tagsInput = document.getElementById('book-tags');
 const submitButton = document.getElementById('submit-button');
 const cancelEditButton = document.getElementById('cancel-edit-button');
@@ -65,6 +99,7 @@ function migrateData() {
     let updated = false;
     memos = memos.map(m => {
         let changed = false;
+        
         // ReviewedDatesへの移行
         if (!m.ReviewedDates) {
             m.ReviewedDates = [];
