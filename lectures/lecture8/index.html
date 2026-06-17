@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>読書メモ</title>
+    <!-- Supabase JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- シンプルな大人向けフォント（Inter と Noto Sans JP）を読み込み -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- ログイン画面 -->
+    <div id="login-screen" class="container">
+        <h1 class="login-title">読書メモ</h1>
+        <p class="login-desc">ログインまたは新規登録してください</p>
+        <form id="auth-form">
+            <div class="form-group">
+                <input type="email" id="auth-email" required placeholder="メールアドレス">
+            </div>
+            <div class="form-group">
+                <input type="password" id="auth-password" required placeholder="パスワード（6文字以上）">
+            </div>
+            <div id="auth-error-msg" class="error-msg" style="display: none;"></div>
+            <div class="auth-actions">
+                <button type="button" id="auth-login-btn">ログイン</button>
+                <button type="button" id="auth-signup-btn" class="action-btn">新規登録</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- メインアプリ画面（初期状態は非表示） -->
+    <div id="app-screen" class="container" style="display: none;">
+        <div class="app-header">
+            <h1 id="app-header-title">メモを作成</h1>
+            <div class="user-info">
+                <span><span id="display-email" class="user-name-text"></span> さん</span>
+                <button id="logout-button" class="action-btn logout">ログアウト</button>
+            </div>
+        </div>
+
+        <!-- ==============================================
+             メモ作成画面
+             ============================================== -->
+        <div id="create-screen" class="screen-section" style="display: none;">
+            <!-- 登録フォーム -->
+            <form id="memo-form">
+                <div class="form-group">
+                    <label for="book-title">本のタイトル</label>
+                    <input type="text" id="book-title" required placeholder="例: 星の王子さま">
+                </div>
+                <div class="form-group">
+                    <label for="book-author">著者</label>
+                    <input type="text" id="book-author" placeholder="例: サン＝テグジュペリ">
+                </div>
+                <div class="form-group">
+                    <label for="book-memo">一言メモ</label>
+                    <textarea id="book-memo" required placeholder="例: 大切なものは目に見えない。"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="book-insight">気づき（この本から何を学んだか）</label>
+                    <textarea id="book-insight" placeholder="例: 目に見えるものだけで判断しないようにしたい。"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="book-tags">タグ（カンマ区切り）</label>
+                    <input type="text" id="book-tags" placeholder="例: 哲学, 小説, 人生">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" id="submit-button">保存する</button>
+                    <button type="button" id="cancel-edit-button" style="display: none;">キャンセル</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- ==============================================
+             振り返り画面
+             ============================================== -->
+        <div id="review-screen" class="screen-section" style="display: none;">
+            
+            <!-- テーマ提案エリア -->
+            <div class="theme-section">
+                <h2>おすすめのテーマ</h2>
+                <div id="theme-suggestions" class="theme-buttons">
+                    <!-- JavaScriptでタグを元に自動生成 -->
+                </div>
+            </div>
+
+            <!-- ランダム振り返りエリア -->
+            <div class="random-review-section">
+                <h2>今日の振り返り（ランダム）</h2>
+                <div id="random-memo-display" class="review-display">
+                    <!-- ランダムなメモ1件が表示される -->
+                </div>
+            </div>
+
+            <!-- 過去メモ一覧（一覧＆検索） -->
+            <div class="past-memos-section">
+                <div class="section-header">
+                    <h2 id="past-memos-title">過去のメモ一覧</h2>
+                </div>
+                <!-- テーマ選択時のリセットボタン -->
+                <button id="clear-theme-filter" class="action-btn" style="display:none; margin-bottom: 16px;">すべてのメモを表示</button>
+                
+                <ul id="memo-list">
+                    <!-- 過去のメモ一覧が追加されます -->
+                </ul>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- 左下のフローティング切り替えボタン -->
+    <button id="nav-floating-btn" class="floating-btn" style="display: none;">
+        <span>🔍 振り返る</span>
+    </button>
+
+    <script src="app.js"></script>
+</body>
+</html>
