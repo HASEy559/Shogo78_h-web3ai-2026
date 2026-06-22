@@ -102,7 +102,7 @@ let currentThemeFilter = null;
 // tagFilter に文字列を渡すと、そのタグを含むメモだけを返します。
 // ---------------------------------------------
 async function fetchMemos(tagFilter = null) {
-    let query = supabase
+    let query = supabaseClient
         .from('memos')
         .select('*')
         .order('created_at', { ascending: false });
@@ -123,7 +123,7 @@ async function fetchMemos(tagFilter = null) {
 // ---------------------------------------------
 // Supabase Auth 処理
 // ---------------------------------------------
-supabase.auth.onAuthStateChange((event, session) => {
+supabaseClient.auth.onAuthStateChange((event, session) => {
     currentSession = session;
     if (session) {
         // ログイン成功
@@ -149,7 +149,7 @@ authLoginBtn.addEventListener('click', async () => {
     authErrorMsg.style.display = 'none';
     const email = authEmail.value;
     const password = authPassword.value;
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
     if (error) {
         authErrorMsg.textContent = error.message;
         authErrorMsg.style.display = 'block';
@@ -160,7 +160,7 @@ authSignupBtn.addEventListener('click', async () => {
     authErrorMsg.style.display = 'none';
     const email = authEmail.value;
     const password = authPassword.value;
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { error } = await supabaseClient.auth.signUp({ email, password });
     if (error) {
         authErrorMsg.textContent = error.message;
         authErrorMsg.style.display = 'block';
@@ -170,7 +170,7 @@ authSignupBtn.addEventListener('click', async () => {
 });
 
 logoutButton.addEventListener('click', async () => {
-    await supabase.auth.signOut();
+    await supabaseClient.auth.signOut();
 });
 
 // ---------------------------------------------
@@ -234,7 +234,7 @@ memoForm.addEventListener('submit', async (e) => {
         //     memos[idx].tags = tags;
         // }
         // localStorage.setItem(getStorageKey(), JSON.stringify(memos));
-        const { error } = await supabase
+        const { error } = await supabaseclient
             .from('memos')
             .update({ title, author, memo_text: memoText, insight, tags })
             .eq('id', editingId);
@@ -258,7 +258,7 @@ memoForm.addEventListener('submit', async (e) => {
         // };
         // memos.push(newMemo);
         // localStorage.setItem(getStorageKey(), JSON.stringify(memos));
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('memos')
             .insert({
                 user_id: currentSession.user.id,
@@ -547,7 +547,7 @@ function createMemoCardHTML(memo, isListMode) {
         deleteBtn.textContent = '削除';
         deleteBtn.addEventListener('click', async () => {
             if (confirm(`「${memo.title}」を削除してもよろしいですか？`)) {
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('memos')
                     .delete()
                     .eq('id', memo.id);
@@ -604,7 +604,7 @@ function createReviewFlagBtn(memo, reviewMetaDiv) {
         // 既存の reviewed_dates 配列に今の日時を追加して Supabase を update
         const updatedDates = [...(memo.reviewed_dates || []), new Date().toISOString()];
 
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('memos')
             .update({ reviewed_dates: updatedDates })
             .eq('id', memo.id);
