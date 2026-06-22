@@ -1,12 +1,8 @@
 // ---------------------------------------------
 // Supabase 設定 (ご自身のプロジェクト情報に書き換えてください)
 // ---------------------------------------------
-//const SUPABASE_URL = 'https://zmbnkfpubmnpkwbmojkg.supabase.co';
-//const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InptYm5rZnB1Ym1ucGt3Ym1vamtnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2OTc2MTgsImV4cCI6MjA5NzI3MzYxOH0.jzd3pq74jTdmTqzd-QcO2jylO3IhHuvhxQf1b2N0xzY';
-//const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-// 修正後
-const SUPABASE_URL = '...';
-const SUPABASE_ANON_KEY = '...';
+const SUPABASE_URL = 'https://zmbnkfpubmnpkwbmojkg.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InptYm5rZnB1Ym1ucGt3Ym1vamtnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2OTc2MTgsImV4cCI6MjA5NzI3MzYxOH0.jzd3pq74jTdmTqzd-QcO2jylO3IhHuvhxQf1b2N0xzY';
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // --- 画面要素の取得 ---
@@ -208,8 +204,8 @@ function switchScreen(screen) {
 
 // [修正] memoForm の submit イベントを非同期（async）に変更
 // データ保存先を localStorage から Supabase DB（insert / update）に変更しました。
-// 新規作成時は supabase.from('memos').insert()、
-// 編集時は supabase.from('memos').update() を呼び出します。
+// 新規作成時は supabaseClient.from('memos').insert()、
+// 編集時は supabaseClient.from('memos').update() を呼び出します。
 // また、カラム名を DB のスキーマに合わせて変更しています（memoText → memo_text）。
 memoForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -234,7 +230,7 @@ memoForm.addEventListener('submit', async (e) => {
         //     memos[idx].tags = tags;
         // }
         // localStorage.setItem(getStorageKey(), JSON.stringify(memos));
-        const { error } = await supabaseclient
+        const { error } = await supabaseClient
             .from('memos')
             .update({ title, author, memo_text: memoText, insight, tags })
             .eq('id', editingId);
