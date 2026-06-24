@@ -1,0 +1,366 @@
+/* -------------------------------------------
+   カラーテーマと基本設定
+------------------------------------------- */
+:root {
+    --color-main: #7FC8A9; /* 落ち着いたミント */
+    --color-bg: #FAFAFA;   /* 背景 */
+    --color-text: #333333; /* テキスト */
+    --color-text-light: #888888;
+    --color-border: #EAEAEA;
+    --color-white: #ffffff;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 8px rgba(0,0,0,0.06);
+}
+
+body {
+    font-family: 'Inter', 'Noto Sans JP', sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    margin: 0;
+    padding: 40px 20px;
+    line-height: 1.6;
+}
+
+/* -------------------------------------------
+   コンテナとレイアウト
+------------------------------------------- */
+.container {
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: var(--color-text);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 32px;
+    letter-spacing: 0.05em;
+    text-align: center;
+}
+
+h2 {
+    color: var(--color-text);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* -------------------------------------------
+   ログイン画面
+------------------------------------------- */
+#login-screen {
+    background: var(--color-bg); /* 背景に馴染ませるか、白にするか。今回は白寄りのフラットで */
+    padding: 40px;
+    text-align: center;
+    margin-top: 80px;
+}
+
+#login-screen h1 {
+    margin-bottom: 16px;
+}
+
+.login-desc {
+    color: var(--color-text-light);
+    margin-bottom: 32px;
+    font-size: 0.95rem;
+}
+
+/* -------------------------------------------
+   ヘッダー（メイン画面）
+------------------------------------------- */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 48px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.app-header h1 {
+    margin: 0;
+    text-align: left;
+    font-size: 1.25rem;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: var(--color-text-light);
+    font-size: 0.9rem;
+}
+
+.user-name-text {
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+/* -------------------------------------------
+   汎用ボタン・アクション
+------------------------------------------- */
+button {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    background-color: var(--color-text);
+    color: var(--color-white);
+}
+
+button:hover {
+    background-color: #555555;
+}
+
+.action-btn {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: var(--color-text-light);
+}
+
+.action-btn:hover {
+    background-color: var(--color-white);
+    color: var(--color-text);
+    border-color: #cccccc;
+}
+
+.action-btn.logout {
+    border: none;
+    background: transparent;
+    padding: 0;
+    color: var(--color-text-light);
+}
+
+.action-btn.logout:hover {
+    color: var(--color-text);
+    background: transparent;
+    text-decoration: underline;
+}
+
+/* -------------------------------------------
+   セクションヘッダー
+------------------------------------------- */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 48px;
+    margin-bottom: 24px;
+}
+
+.skip-button {
+    background-color: transparent;
+    color: var(--color-text-light);
+    border: 1px solid var(--color-border);
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+.skip-button:hover {
+    background-color: var(--color-white);
+    color: var(--color-text);
+    border-color: #cccccc;
+}
+
+/* -------------------------------------------
+   カードデザイン（共通）
+------------------------------------------- */
+.card-container {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 48px;
+}
+
+.card, #memo-list li {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover, #memo-list li:hover {
+    box-shadow: var(--shadow-md);
+    border-color: #e0e0e0;
+}
+
+.memo-title {
+    color: var(--color-text);
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin-bottom: 12px;
+    padding-right: 48px;
+}
+
+.memo-text {
+    font-size: 0.95rem;
+    color: var(--color-text-light);
+    white-space: pre-wrap;
+    margin-bottom: 24px;
+    line-height: 1.7;
+}
+
+/* -------------------------------------------
+   いいねボタン
+------------------------------------------- */
+.card-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.like-button {
+    background-color: transparent;
+    color: var(--color-text-light);
+    border: 1px solid var(--color-border);
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.like-button:hover {
+    background-color: var(--color-bg);
+    color: var(--color-main);
+    border-color: var(--color-main);
+}
+
+/* いいね済みのアニメーションや状態 */
+.like-button.liked {
+    color: var(--color-main);
+    border-color: var(--color-main);
+}
+
+/* -------------------------------------------
+   フォームエリア
+------------------------------------------- */
+#memo-form {
+    background: var(--color-white);
+    padding: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 48px;
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--color-text);
+    font-size: 0.95rem;
+}
+
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 0.95rem;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--color-main);
+    background-color: var(--color-white);
+}
+
+textarea {
+    resize: vertical;
+    height: 120px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+}
+
+#submit-button {
+    flex: 1;
+    background-color: var(--color-main);
+    color: var(--color-white);
+}
+
+#submit-button:hover {
+    background-color: #6fb296; /* 少し濃いミント */
+}
+
+#cancel-edit-button {
+    flex: 1;
+    background-color: transparent;
+    color: var(--color-text-light);
+    border: 1px solid var(--color-border);
+}
+
+#cancel-edit-button:hover {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+}
+
+/* -------------------------------------------
+   リストスタイル
+------------------------------------------- */
+#memo-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#memo-list li {
+    margin-bottom: 20px;
+}
+
+.memo-meta {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    font-size: 0.85rem;
+    color: var(--color-main);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.memo-actions {
+    margin-top: 16px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 480px) {
+    .card-container {
+        flex-direction: column;
+    }
+    .app-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+}
