@@ -528,8 +528,45 @@ function createLogCardHTML(log, mode) {
 }
 
 // ============================================
-// 初期化：確認日のデフォルトを今日に設定
+// 星フィールド生成（宇宙空間背景）
+// ============================================
+function createStarField() {
+    const field = document.createElement('div');
+    field.className = 'star-field';
+    field.setAttribute('aria-hidden', 'true');
+
+    const TOTAL = 220;
+    let html = '';
+
+    for (let i = 0; i < TOTAL; i++) {
+        const x    = (Math.random() * 100).toFixed(2);
+        const y    = (Math.random() * 100).toFixed(2);
+        // 星のサイズ分布：小さい星が多く、大きい星は少ない
+        const rand = Math.random();
+        const size = rand < 0.65 ? 1 : rand < 0.90 ? 2 : 3;
+        const op   = (0.25 + Math.random() * 0.75).toFixed(2);
+        const dur  = (2.5 + Math.random() * 5).toFixed(1);
+        const del  = (Math.random() * 6).toFixed(1);
+        // サイズ2以上の一部の星にグローを付ける
+        const bright = size >= 2 && Math.random() > 0.5;
+
+        html += `<div class="star${bright ? ' bright' : ''}" style="` +
+            `left:${x}%;top:${y}%;` +
+            `width:${size}px;height:${size}px;` +
+            `--star-op:${op};` +
+            `animation-duration:${dur}s;` +
+            `animation-delay:-${del}s` +
+        `"></div>`;
+    }
+
+    field.innerHTML = html;
+    document.body.prepend(field);
+}
+
+// ============================================
+// 初期化：確認日のデフォルトを今日に設定 & 星フィールド生成
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
     if (checkedAtInput) checkedAtInput.value = today();
+    createStarField();
 });
