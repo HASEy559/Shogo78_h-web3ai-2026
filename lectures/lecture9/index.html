@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>積んドク！log</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#05070f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ========================================
+         ログイン画面
+    ======================================== -->
+    <div id="login-screen">
+        <div class="login-panel">
+            <div class="login-content">
+                <div class="login-logo">
+                    <div class="logo-rocket">🚀</div>
+                    <h1 class="login-title">積んドク！<span class="title-accent">log</span></h1>
+                    <p class="login-tagline">// PERSONAL NAVIGATION LOG SYSTEM //</p>
+                </div>
+                <form id="auth-form" class="login-form">
+                    <div class="form-group">
+                        <label class="mono-label">▸ PILOT ID</label>
+                        <input type="email" id="auth-email" required placeholder="email@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="mono-label">▸ ACCESS CODE</label>
+                        <input type="password" id="auth-password" required placeholder="••••••••">
+                    </div>
+                    <div id="auth-error-msg" class="error-msg" style="display: none;"></div>
+                    <div class="auth-actions">
+                        <button type="button" id="auth-login-btn" class="btn-primary">LOGIN</button>
+                        <button type="button" id="auth-signup-btn" class="btn-ghost">NEW ACCOUNT</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================
+         メインアプリ
+    ======================================== -->
+    <div id="app-screen" style="display: none;">
+
+        <!-- ヘッダー -->
+        <header class="ship-header">
+            <div class="header-brand">
+                <span class="header-rocket">🚀</span>
+                <span class="header-title">積んドク！<span class="title-accent">log</span></span>
+            </div>
+            <div class="header-pilot">
+                <span class="pilot-label">PILOT: <span id="display-email" class="pilot-email"></span></span>
+                <button id="logout-button" class="btn-ghost-sm">LOGOUT</button>
+            </div>
+        </header>
+
+        <!-- ナビゲーションタブ -->
+        <nav class="mission-nav">
+            <button class="nav-tab active" data-screen="create">
+                <span class="tab-icon">📡</span>
+                <span class="tab-label">新規ログ</span>
+            </button>
+            <button class="nav-tab" data-screen="browse">
+                <span class="tab-icon">🔭</span>
+                <span class="tab-label">ログ一覧</span>
+            </button>
+            <button class="nav-tab" data-screen="random">
+                <span class="tab-icon">🌌</span>
+                <span class="tab-label">ランダム探索</span>
+            </button>
+        </nav>
+
+        <!-- メインコンテンツ -->
+        <main class="mission-main">
+
+            <!-- ========== 新規ログ作成画面 ========== -->
+            <section id="create-screen" class="mission-screen">
+                <div class="screen-header">
+                    <h2 class="screen-title">// <span id="create-screen-label">新規ログ記録</span> //</h2>
+                </div>
+                <form id="memo-form" class="log-form">
+                    <div class="form-group">
+                        <label for="book-title">📚 タイトル <span class="required">*</span></label>
+                        <input type="text" id="book-title" required placeholder="本・記事・論文・ウェブページのタイトル">
+                    </div>
+                    <div class="form-group">
+                        <label for="source-url">🔗 ソースURL</label>
+                        <input type="url" id="source-url" placeholder="https://... （記事リンク・X のポストURL など）">
+                    </div>
+                    <div class="form-group">
+                        <label for="book-author">✍️ 著者 / 出典</label>
+                        <input type="text" id="book-author" placeholder="著者名・媒体名など">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="book-progress">🗺️ どこまで確認したか</label>
+                            <select id="book-progress">
+                                <option value="title_only">📡 タイトルのみ</option>
+                                <option value="toc">🔭 目次まで</option>
+                                <option value="overview">🗺️ ざっくり内容を把握</option>
+                                <option value="skimmed">👁️ 一通り目を通した</option>
+                                <option value="completed">✅ 完全読了</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="checked-at">📅 確認した日</label>
+                            <input type="date" id="checked-at">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="book-memo">💫 なぜ気になったか</label>
+                        <textarea id="book-memo" placeholder="何が引っかかった？どこが面白そう？なぜ保存した？"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="book-insight">💡 メモ・気づき</label>
+                        <textarea id="book-insight" placeholder="読んで感じたこと・学んだこと・覚えておきたいこと"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="book-tags">🏷️ キーワード（カンマ区切り）</label>
+                        <input type="text" id="book-tags" placeholder="例: AI, 哲学, デザイン, 宇宙">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" id="submit-button" class="btn-primary">📡 ログを記録する</button>
+                        <button type="button" id="cancel-edit-button" class="btn-ghost" style="display: none;">キャンセル</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- ========== ログ一覧・検索画面 ========== -->
+            <section id="browse-screen" class="mission-screen" style="display: none;">
+                <div class="screen-header">
+                    <h2 class="screen-title">// ログ一覧 //</h2>
+                </div>
+                <div class="search-panel">
+                    <input type="text" id="search-input" class="search-input"
+                           placeholder="🔍 タイトル・内容・キーワード・URLで検索...">
+                    <div class="filter-row">
+                        <select id="filter-progress" class="filter-select">
+                            <option value="">すべての進捗</option>
+                            <option value="title_only">📡 タイトルのみ</option>
+                            <option value="toc">🔭 目次まで</option>
+                            <option value="overview">🗺️ ざっくり内容</option>
+                            <option value="skimmed">👁️ 一通り目を通した</option>
+                            <option value="completed">✅ 完全読了</option>
+                        </select>
+                        <div class="date-filter-group">
+                            <input type="date" id="filter-date-from" class="filter-date" title="この日以降">
+                            <span class="date-sep">〜</span>
+                            <input type="date" id="filter-date-to" class="filter-date" title="この日以前">
+                        </div>
+                        <button id="clear-filters-btn" class="btn-ghost-sm">リセット</button>
+                    </div>
+                    <div id="search-result-count" class="result-count"></div>
+                </div>
+                <ul id="memo-list" class="log-list"></ul>
+            </section>
+
+            <!-- ========== ランダム探索画面 ========== -->
+            <section id="random-screen" class="mission-screen" style="display: none;">
+                <div class="screen-header">
+                    <h2 class="screen-title">// ランダム探索 //</h2>
+                    <p class="screen-desc">過去のログからランダムに最大4件をスキャンします</p>
+                </div>
+                <div class="rescan-area">
+                    <button id="rescan-btn" class="btn-rescan">📡 再スキャン</button>
+                </div>
+                <div id="random-display" class="random-grid"></div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- トースト通知コンテナ -->
+    <div class="toast-container" aria-live="polite"></div>
+
+    <script src="app.js"></script>
+
+    <!-- Service Worker 登録 -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(() => {
+                    // localhost や file:// では失敗することがあるが無視してよい
+                });
+            });
+        }
+    </script>
+</body>
+</html>
